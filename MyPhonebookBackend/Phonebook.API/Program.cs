@@ -1,6 +1,5 @@
 using Phonebook.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
 using Phonebook.Application.Contacts;
 using Phonebook.Infrastructure.Repositories;
 using MediatR;
@@ -38,6 +37,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseAuthorization();
+
+app.MapControllers(); // 👈 Isso mapeia os endpoints dos controllers
 
 // app.UseHttpsRedirection(); // Desativado já que este é um projeto de teste
 
