@@ -1,7 +1,7 @@
-var builder = WebApplication.CreateBuilder(args);
-
 using Phonebook.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+
+var builder = WebApplication.CreateBuilder(args);
 
 // Configuração da connection string
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
