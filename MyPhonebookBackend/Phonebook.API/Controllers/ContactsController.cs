@@ -1,6 +1,7 @@
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Phonebook.Infrastructure.Data;
-using Phonebook.Domain.Entities;
+using Phonebook.Application.Contacts.Commands;
+using Phonebook.Application.Contacts.Queries;
 
 namespace Phonebook.API.Controllers
 {
@@ -8,50 +9,25 @@ namespace Phonebook.API.Controllers
     [Route("api/[controller]")]
     public class ContactsController : ControllerBase
     {
-        private readonly PhonebookDbContext _context;
+        private readonly IMediator _mediator;
 
-        public ContactsController(PhonebookDbContext context)
+        public ContactsController(IMediator mediator)
         {
-            _context = context;
+            _mediator = mediator;
         }
 
-        // GET: api/contacts
         [HttpGet]
-        public IActionResult GetContacts()
+        public async Task<IActionResult> GetContacts()
         {
-            var contacts = _context.Contacts.ToList();
+            var contacts = await _mediator.Send(new GetContactsQuery());
             return Ok(contacts);
         }
 
-        // POST: api/contacts
         [HttpPost]
-        public IActionResult CreateContact([FromBody] ContactDto contactDto)
+        public async Task<IActionResult> CreateContact([FromBody] CreateContactCommand command)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var contact = new Contact
-            {
-                Name = contactDto.Name,
-                PhoneNumber = contactDto.PhoneNumber,
-                Email = contactDto.Email,
-                CreatedAt = DateTime.UtcNow,
-            };
-
-            _context.Contacts.Add(contact);
-            _context.SaveChanges();
-
-            return CreatedAtAction(nameof(GetContacts), new { id = contact.Id }, contact);
+            var id = await _mediator.Send(command);
+            return Ok(new { Id = id });
         }
-    }
-
-    // DTO para criação de contatos
-    public class ContactDto
-    {
-        public string Name { get; set; }
-        public string PhoneNumber { get; set; }
-        public string Email { get; set; }
     }
 }
