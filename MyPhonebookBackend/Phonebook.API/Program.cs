@@ -1,5 +1,21 @@
 var builder = WebApplication.CreateBuilder(args);
 
+using Phonebook.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
+
+// Configuração da connection string
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? "Server=localhost;Database=PhonebookDb;Trusted_Connection=True;TrustServerCertificate=True;";
+
+// Adiciona o DbContext ao container de injeção de dependência
+/*
+Utilização de padrões de projeto (repositórios, services,
+controllers, interfaces, injeção de dependência, etc.) dentro do
+contexto da aplicação
+*/
+builder.Services.AddDbContext<PhonebookDbContext>(options =>
+    options.UseSqlServer(connectionString));
+
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
