@@ -22,10 +22,23 @@ builder.Services.AddDbContext<PhonebookDbContext>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// CORS liberado para tudo já que este é um projeto de teste
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy
+            .AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
 
 app.UseSwagger(); // Sempre ativa o Swagger já que este é um projeto de teste
 app.UseSwaggerUI();
+app.UseCors("AllowAll");
 
 // if (app.Environment.IsDevelopment())
 // {
