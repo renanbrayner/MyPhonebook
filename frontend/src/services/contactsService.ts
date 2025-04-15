@@ -5,7 +5,7 @@ export async function getContacts() {
   return data
 }
 
-export async function createContact(payload: { name: string; email: string; phone: string }) {
+export async function createContact(payload: { name: string; email: string; phoneNumber: string }) {
   const { data } = await api.post('/contacts', payload)
   return data
 }
