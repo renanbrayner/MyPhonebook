@@ -29,3 +29,24 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* tailwind-style page transitions */
+.fade-enter-active,
+.fade-leave-active {
+  @apply transition-opacity duration-300 ease-in-out;
+}
+.fade-enter-from,
+.fade-leave-to {
+  @apply opacity-0;
+}
+
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  @apply transition-all duration-300 ease-in-out;
+}
+.slide-fade-enter-from {
+  @apply opacity-0 translate-y-3;
+}
+.slide-fade-leave-to {
+  @apply opacity-0 -translate-y-3;
+}
