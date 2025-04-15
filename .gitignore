@@ -1,83 +1,71 @@
-# .NET Build
-bin/
-obj/
-out/
+# .NET (.NET Core / ASP.NET)
+**/bin/
+**/obj/
+**/out/
 *.user
 *.rsuser
 *.suo
 *.userprefs
 *.csproj.user
-
-# .NET EF Core tools
-Migrations/
-
-# ASP.NET Secrets
-secrets.json
-
-# VSCode / IDE configs
-.vscode/
-.idea/
 *.sln.docstates
 
-# OS generated files
-.DS_Store
+# EF Core migrations (gerenciadas manualmente)
+Migrations/
+
+# ASP.NET Secrets (local)
+secrets.json
+
+# Frontend (Vue + Vite + pnpm)
+node_modules/
+dist/
+build/
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# Vite / Vue cache
+.vite/
+.cache/
+coverage/
+coverage-final.json
+.nyc_output/
+TestResults/
+
+# Dotenv
+.env
+.env.local
+.env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDEs / Ferramentas
+.vscode/
+.idea/
+*.code-workspace
+.zed/
+
+# Logs / Sistema / Temporários
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.pid
+*.tmp
+*.temp
+*.bak
+*.swp
+*.old
+*.orig
 Thumbs.db
+.DS_Store
 
 # Docker
 **/docker-compose.override.yml
 **/.docker/
 
-# Node.js / Frontend
-node_modules/
-dist/
-build/
-.env
-.env.*.local
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
-
-# Optional: Log files
-*.log
-
-# Optional: dotenv
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# Optional: NPM / Vue caches
-.cache/
-.vuepress/dist/
-.nuxt/
-coverage/
-coverage-final.json
-.nyc_output/
-
-# Test output
-TestResults/
-
-# Other system folders
-*.swp
-*.bak
-*.tmp
-*.temp
-*.old
-*.orig
-*.pid
-
-# VS for Mac
-.vscode/
-.idea/
-
-# Zed
-.zed/
-
-# Optional: Rider
-.idea/
+# JetBrains Rider
 .idea_modules/
 .idea_misc/
