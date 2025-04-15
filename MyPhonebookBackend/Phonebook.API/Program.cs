@@ -13,30 +13,25 @@ builder.Services.AddScoped<IContactRepository, ContactRepository>();
 
 // Configuração da connection string
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-    ?? "Server=localhost;Database=PhonebookDb;Trusted_Connection=True;TrustServerCertificate=True;";
+    ?? "Server=db;Database=PhonebookDb;User Id=sa;Password=P@ssw0rd;TrustServerCertificate=True;";
 
 // Adiciona o DbContext ao container de injeção de dependência
-/*
-Utilização de padrões de projeto (repositórios, services,
-controllers, interfaces, injeção de dependência, etc.) dentro do
-contexto da aplicação
-*/
 builder.Services.AddDbContext<PhonebookDbContext>(options =>
     options.UseSqlServer(connectionString));
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger(); // Sempre ativa o Swagger já que este é um projeto de teste
+app.UseSwaggerUI();
+
+// if (app.Environment.IsDevelopment())
+// {
+//     app.UseSwagger();
+//     app.UseSwaggerUI();
+// }
 
 app.UseAuthorization();
 
