@@ -1,11 +1,10 @@
-import { ref, onMounted } from 'vue'
-import { getContacts, createContact } from '@/services/contactsService'
+import { ref } from 'vue'
+import { getContacts, createContact, deleteContact } from '@/services/contactsService'
 import { parseApiError } from '@/utils/errorHandler'
+import type { Contact } from '@/types/contact'
 
 export function useContacts() {
-  const contacts = ref<
-    { id: number; name: string; email: string; phoneNumber: string; createdAt: string }[]
-  >([]) // TODO: tipagem dos contatos
+  const contacts = ref<Contact[]>([]) // TODO: tipagem dos contatos
   const loading = ref<boolean>(false)
   const error = ref<string | null>(null)
 
@@ -32,11 +31,25 @@ export function useContacts() {
     }
   }
 
+  const removeContact = async (id: string) => {
+    error.value = null
+    const oldContacts = contacts.value
+    contacts.value = [...contacts.value.filter((contact) => contact.id !== id)] // optimistic update
+    try {
+      await deleteContact(id)
+    } catch (err) {
+      error.value = parseApiError(err)
+      contacts.value = oldContacts
+      throw err
+    }
+  }
+
   return {
     contacts,
     addContact,
     loading,
     error,
     loadContacts,
+    removeContact,
   }
 }

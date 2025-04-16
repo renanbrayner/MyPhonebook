@@ -4,6 +4,7 @@ import ContactListItem from './ContactListItem.vue'
 import { useContacts } from '@/composables/useContacts'
 import Skeleton from 'primevue/skeleton'
 import { onMounted } from 'vue'
+
 const { contacts, loading, error, loadContacts } = useContacts()
 
 onMounted(() => {

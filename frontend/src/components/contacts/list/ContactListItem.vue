@@ -2,15 +2,19 @@
 import Avatar from 'primevue/avatar'
 import Panel from 'primevue/panel'
 import Button from 'primevue/button'
+import { useConfirm } from 'primevue/useconfirm'
+import { useToast } from 'primevue/usetoast'
 import { defineProps } from 'vue'
+import { useContacts } from '@/composables/useContacts'
+import ConfirmPopup from 'primevue/confirmpopup'
+import Toast from 'primevue/toast'
 
-defineProps<{
+const props = defineProps<{
   contact: {
-    id: number
+    id: string
     name: string
     email: string
     phoneNumber: string
-    createdAt: string
   }
   isOpen: boolean
 }>()
@@ -18,9 +22,50 @@ defineProps<{
 const emit = defineEmits<{
   (e: 'toggle'): void
 }>()
+
+const { removeContact } = useContacts()
+
+const confirm = useConfirm()
+const toast = useToast()
+
+const confirmDeleteContact = (event) => {
+  confirm.require({
+    target: event.currentTarget,
+    message: 'Tem certeza que deseja excluir este contato?',
+    icon: 'pi pi-exclamation-triangle',
+    rejectProps: {
+      label: 'Cancelar',
+      outlined: true,
+    },
+    acceptProps: {
+      label: 'Deletar',
+      severity: 'danger',
+    },
+    accept: async () => {
+      try {
+        await removeContact(props.contact.id)
+        toast.add({
+          severity: 'success',
+          summary: 'Contato excluído',
+          detail: 'O contato foi removido com sucesso.',
+          life: 3000,
+        })
+      } catch (err) {
+        toast.add({
+          severity: 'error',
+          summary: 'Erro ao excluir',
+          detail: err instanceof Error ? err.message : 'Erro desconhecido',
+          life: 3000,
+        })
+      }
+    },
+  })
+}
 </script>
 
 <template>
+  <Toast />
+  <ConfirmPopup></ConfirmPopup>
   <Panel :toggleable="true" :collapsed="!isOpen" @toggle="emit('toggle')">
     <template #toggleicon="{ collapsed }">
       <span :class="collapsed ? 'pi pi-chevron-down' : 'pi pi-chevron-up'"></span>
@@ -44,14 +89,14 @@ const emit = defineEmits<{
       </div>
     </div>
     <template #footer>
-      <div class="flex justify-end">
+      <div class="justify-end hidden md:flex">
         <Button
           icon="pi pi-pencil"
           severity="secondary"
           rounded
           text
           size="small"
-          v-tooltip.bottom="{ value: 'Editar contato', showDelay: 1000, hideDelay: 100 }"
+          v-tooltip.bottom="{ value: 'Editar contato', showDelay: 500, hideDelay: 100 }"
         />
         <Button
           icon="pi pi-trash"
@@ -59,7 +104,8 @@ const emit = defineEmits<{
           rounded
           text
           size="small"
-          v-tooltip.bottom="{ value: 'Excluir contato', showDelay: 1000, hideDelay: 100 }"
+          @click="confirmDeleteContact($event)"
+          v-tooltip.bottom="{ value: 'Excluir contato', showDelay: 500, hideDelay: 100 }"
         />
       </div>
     </template>

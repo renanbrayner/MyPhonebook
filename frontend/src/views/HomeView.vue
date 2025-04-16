@@ -21,7 +21,7 @@ import { RouterLink } from 'vue-router'
           aria-label="adicionar contato"
           outlined
           severity="secondary"
-          v-tooltip="{ value: 'Adicionar contato', showDelay: 1000, hideDelay: 100 }"
+          v-tooltip="{ value: 'Adicionar contato', showDelay: 500, hideDelay: 100 }"
         />
       </RouterLink>
     </div>
