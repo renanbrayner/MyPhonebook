@@ -72,7 +72,7 @@ const confirmDeleteContact = (event) => {
     </template>
     <template #header>
       <div @click="emit('toggle')" class="flex items-center gap-2 w-full cursor-pointer">
-        <Avatar :label="contact.name[0]" shape="circle" />
+        <Avatar :label="contact.name?.[0]" shape="circle" />
         <span class="font-bold">{{ contact.name }}</span>
       </div>
     </template>
