@@ -3,8 +3,9 @@ import { getContacts, createContact, deleteContact } from '@/services/contactsSe
 import { parseApiError } from '@/utils/errorHandler'
 import type { Contact } from '@/types/contact'
 
+const contacts = ref<Contact[]>([]) // TODO: tipagem dos contatos
+
 export function useContacts() {
-  const contacts = ref<Contact[]>([]) // TODO: tipagem dos contatos
   const loading = ref<boolean>(false)
   const error = ref<string | null>(null)
 
