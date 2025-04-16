@@ -3,9 +3,9 @@ namespace Phonebook.Application.Contacts.Commands;
 
 public class DeleteContactCommand : IRequest<bool>
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
-    public DeleteContactCommand(int id)
+    public DeleteContactCommand(Guid id)
     {
         Id = id;
     }
