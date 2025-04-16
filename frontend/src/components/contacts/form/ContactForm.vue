@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import BaseInput from '../../BaseInput.vue'
 import Button from 'primevue/button'
 import { RouterLink } from 'vue-router'
@@ -10,9 +10,9 @@ const { addContact } = useContacts()
 const toast = useToast()
 
 const name = ref('')
+const submitting = ref(false)
 const phone = ref('')
 const email = ref('')
-const submitting = ref(false)
 
 const handleSubmit = async () => {
   submitting.value = true
@@ -36,7 +36,13 @@ const handleSubmit = async () => {
 <template>
   <form @submit.prevent="handleSubmit" class="flex flex-col gap-4">
     <BaseInput id="name" label="Nome" icon="pi pi-user" v-model="name" />
-    <BaseInput id="phone" label="Telefone" icon="pi pi-phone" v-model="phone" />
+    <BaseInput
+      mask="(99) 99999-9999"
+      id="phone"
+      label="Telefone"
+      icon="pi pi-phone"
+      v-model="phone"
+    />
     <BaseInput id="email" label="E-mail" icon="pi pi-envelope" v-model="email" />
     <div class="flex gap-4">
       <RouterLink class="flex-1" to="/">
