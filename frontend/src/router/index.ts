@@ -19,8 +19,8 @@ const router = createRouter({
       ],
     },
     {
-      path: '/novo-contato',
-      name: 'novo-contato',
+      path: '/contato',
+      name: 'contato',
       component: DefaultLayout,
       children: [
         {
