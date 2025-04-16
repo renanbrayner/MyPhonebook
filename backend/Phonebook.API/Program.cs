@@ -1,6 +1,5 @@
 using Phonebook.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using Phonebook.Application.Contacts;
 using Phonebook.Infrastructure.Repositories;
 using MediatR;
 
@@ -48,7 +47,7 @@ app.UseCors("AllowAll");
 
 app.UseAuthorization();
 
-app.MapControllers(); // 👈 Isso mapeia os endpoints dos controllers
+app.MapControllers(); // Isso mapeia os endpoints dos controllers
 
 // app.UseHttpsRedirection(); // Desativado já que este é um projeto de teste
 

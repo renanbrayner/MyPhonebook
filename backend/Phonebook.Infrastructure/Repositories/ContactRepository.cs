@@ -1,4 +1,3 @@
-using Phonebook.Application.Contacts;
 using Phonebook.Domain.Entities;
 using Phonebook.Infrastructure.Data;
 

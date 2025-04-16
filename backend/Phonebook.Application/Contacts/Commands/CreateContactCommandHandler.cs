@@ -1,6 +1,6 @@
 using MediatR;
-using Phonebook.Application.Contacts;
 using Phonebook.Domain.Entities;
+using Phonebook.Infrastructure.Repositories;
 
 namespace Phonebook.Application.Contacts.Commands
 {
@@ -15,13 +15,7 @@ namespace Phonebook.Application.Contacts.Commands
 
         public async Task<Guid> Handle(CreateContactCommand request, CancellationToken cancellationToken)
         {
-            var contact = new Contact
-            {
-                Name = request.Name,
-                PhoneNumber = request.PhoneNumber,
-                Email = request.Email,
-                CreatedAt = DateTime.UtcNow
-            };
+            var contact = new Contact(request.Name, request.PhoneNumber, request.Email);
 
             return await _repository.AddAsync(contact, cancellationToken);
         }
