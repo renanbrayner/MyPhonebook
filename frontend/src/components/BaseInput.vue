@@ -12,11 +12,14 @@ defineProps<{
 </script>
 
 <template>
-  <FloatLabel variant="in">
-    <IconField>
-      <InputIcon v-if="icon" :class="icon" />
-      <slot />
-    </IconField>
-    <label>{{ label }}</label>
-  </FloatLabel>
+  <div>
+    <FloatLabel variant="in">
+      <IconField>
+        <InputIcon v-if="icon" :class="icon" />
+        <slot />
+      </IconField>
+      <label>{{ label }}</label>
+    </FloatLabel>
+    <slot name="message" />
+  </div>
 </template>
