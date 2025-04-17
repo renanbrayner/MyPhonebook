@@ -28,6 +28,11 @@ const router = createRouter({
           name: 'Novo Contato',
           component: ContactNewView,
         },
+        {
+          path: ':id',
+          name: 'Editar Contato',
+          component: ContactNewView,
+        },
       ],
     },
   ],

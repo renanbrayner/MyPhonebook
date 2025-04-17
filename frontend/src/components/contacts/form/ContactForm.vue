@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { Form } from '@primevue/forms'
 import type { FormSubmitEvent } from '@primevue/forms'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import BaseInput from '../../BaseInput.vue'
 import Button from 'primevue/button'
 import { RouterLink } from 'vue-router'
-import { useContacts } from '@/composables/useContacts'
 import { useToast } from 'primevue/usetoast'
 import InputMask from 'primevue/inputmask'
 import InputText from 'primevue/inputtext'
@@ -13,12 +12,32 @@ import { zodResolver } from '@primevue/forms/resolvers/zod'
 import { z } from 'zod'
 import Toast from 'primevue/toast'
 
-const { addContact } = useContacts()
+const props = defineProps<{
+  initialValues?: {
+    name: string
+    phoneNumber: string
+    email: string
+  }
+  onSubmit: (formData: { name: string; phoneNumber: string; email: string }) => Promise<void>
+}>()
+
+const formRef = ref<InstanceType<typeof Form>>()
+watch(
+  // Isso é necessário pois o <Form> do PrimeVue só “puxa” o initialValues uma única vez na montagem, e depois não sincroniza mais automaticamente com essa prop
+  () => props.initialValues,
+  (vals) => {
+    if (formRef.value && vals) {
+      formRef.value.setValues(vals)
+    }
+  },
+  { immediate: true },
+)
+
 const toast = useToast()
 
 const contactSchema = z.object({
   name: z.string().nonempty({ message: 'Nenhum nome informado' }),
-  phone: z
+  phoneNumber: z
     .string()
     .transform((val) => val.replace(/\D/g, ''))
     .refine((val) => val.length === 10 || val.length === 11, {
@@ -32,7 +51,6 @@ const resolver = zodResolver(contactSchema)
 const submitting = ref(false)
 
 const handleSubmit = async (event: FormSubmitEvent) => {
-  console.log(event)
   if (!event.valid) {
     toast.add({
       severity: 'error',
@@ -40,25 +58,24 @@ const handleSubmit = async (event: FormSubmitEvent) => {
       detail: 'Corrija os campos com erros antes de enviar',
       life: 3000,
     })
-    console.log('not valid')
     return
   }
 
-  const { name, phone, email } = Object.fromEntries(
-    Object.entries(event.states).map(([key, val]) => [key, val.value]),
-  )
+  type FieldKey = 'name' | 'phoneNumber' | 'email'
+
+  const formData = Object.fromEntries(
+    Object.entries(event.states).map(([key, val]) => {
+      const k = key as FieldKey
+      return [k, val.value || props.initialValues?.[k] || '']
+    }),
+  ) as Record<FieldKey, string>
 
   submitting.value = true
   try {
-    await addContact({ name, phoneNumber: phone, email })
-    toast.add({ severity: 'success', summary: 'Contato criado!', life: 3000 })
-  } catch (error) {
-    console.log(error)
-    toast.add({
-      severity: 'error',
-      summary: 'Erro',
-      detail: 'Não foi possível criar o contato',
-      life: 3000,
+    await props.onSubmit({
+      name: formData.name,
+      phoneNumber: formData.phoneNumber,
+      email: formData.email,
     })
   } finally {
     submitting.value = false
@@ -69,11 +86,12 @@ const handleSubmit = async (event: FormSubmitEvent) => {
 <template>
   <Toast />
   <Form
+    ref="formRef"
     v-slot="$form"
     :resolver="resolver"
     @submit="handleSubmit"
     class="flex flex-col gap-1"
-    :initialValues="{ name: '', phone: '', email: '' }"
+    :initialValues="props.initialValues ?? { name: '', phoneNumber: '', email: '' }"
   >
     <BaseInput label="Nome" icon="pi pi-user">
       <InputText name="name" />
@@ -90,16 +108,16 @@ const handleSubmit = async (event: FormSubmitEvent) => {
       </template>
     </BaseInput>
     <BaseInput label="Telefone" icon="pi pi-phone">
-      <InputMask name="phone" :autoClear="false" mask="(99) 99999-9999" />
+      <InputMask name="phoneNumber" :autoClear="false" mask="(99) 99999-9999" />
       <template #message>
         <small
-          :data-hide="!$form.phone?.invalid"
+          :data-hide="!$form.phoneNumber?.invalid"
           class="min-h-[1.75rem] data-[hide=true]:opacity-0 data-[hide=true]:-translate-y-1 block transition-all opacity-100 duration-150 translate-y-0 text-sm text-red-400 py-1"
           severity="error"
           size="small"
           variant="simple"
         >
-          {{ $form.phone?.error?.message }}
+          {{ $form.phoneNumber?.error?.message }}
         </small>
       </template>
     </BaseInput>

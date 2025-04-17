@@ -1,5 +1,11 @@
 import { ref } from 'vue'
-import { getContacts, createContact, deleteContact } from '@/services/contactsService'
+import {
+  getContacts,
+  createContact,
+  deleteContact,
+  getContactById,
+  updateContact,
+} from '@/services/contactsService'
 import { parseApiError } from '@/utils/errorHandler'
 import type { Contact } from '@/types/contact'
 
@@ -45,12 +51,36 @@ export function useContacts() {
     }
   }
 
+  const editContact = async (
+    id: string,
+    payload: { name: string; phoneNumber: string; email: string },
+  ) => {
+    error.value = null
+    try {
+      await updateContact(id, payload)
+    } catch (err) {
+      error.value = parseApiError(err)
+      throw err
+    }
+  }
+
+  const loadContactById = async (id: string) => {
+    // const contact = contacts.value.find((contact) => contact.id === id)
+    const contact = getContactById(id)
+    if (!contact) {
+      throw new Error('Contact not found')
+    }
+    return contact
+  }
+
   return {
     contacts,
     addContact,
     loading,
     error,
     loadContacts,
+    loadContactById,
     removeContact,
+    editContact,
   }
 }

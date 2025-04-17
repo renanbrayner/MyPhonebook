@@ -90,14 +90,16 @@ const confirmDeleteContact = (event) => {
     </div>
     <template #footer>
       <div class="justify-end hidden md:flex">
-        <Button
-          icon="pi pi-pencil"
-          severity="secondary"
-          rounded
-          text
-          size="small"
-          v-tooltip.bottom="{ value: 'Editar contato', showDelay: 500, hideDelay: 100 }"
-        />
+        <RouterLink :to="`/contato/${contact.id}`">
+          <Button
+            icon="pi pi-pencil"
+            severity="secondary"
+            rounded
+            text
+            size="small"
+            v-tooltip.bottom="{ value: 'Editar contato', showDelay: 500, hideDelay: 100 }"
+          />
+        </RouterLink>
         <Button
           icon="pi pi-trash"
           severity="secondary"
