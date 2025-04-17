@@ -6,5 +6,6 @@ namespace Phonebook.Infrastructure.Repositories
     {
         Task<Guid> AddAsync(Contact contact, CancellationToken cancellationToken);
         Task<List<Contact>> GetAllAsync(CancellationToken cancellationToken);
+        Task<Contact?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
     }
 }

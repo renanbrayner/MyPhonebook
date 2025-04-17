@@ -23,5 +23,10 @@ namespace Phonebook.Infrastructure.Repositories
         {
             return await Task.FromResult(_context.Contacts.ToList());
         }
+
+        public async Task<Contact?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+        {
+            return await _context.Contacts.FindAsync(new object[] { id }, cancellationToken);
+        }
     }
 }

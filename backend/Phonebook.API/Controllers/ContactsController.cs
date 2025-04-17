@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Phonebook.Application.Contacts.Commands;
 using Phonebook.Application.Contacts.Queries;
 using Phonebook.Domain.DTO;
-using Phonebook.Domain.Entities;
 
 namespace Phonebook.API.Controllers
 {
@@ -28,6 +27,18 @@ namespace Phonebook.API.Controllers
             return Ok(contactsListDTO);
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetContactById(Guid id)
+        {
+            var contact = await _mediator.Send(new GetContactByIdQuery(id));
+
+            if (contact is null)
+                return NotFound();
+
+            ContactDTO contactDTO = new ContactDTO(contact.Id, contact.Name!, contact.PhoneNumber!, contact.Email!);
+            return Ok(contactDTO);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateContact([FromBody] CreateContactDTO createContactDTO)
         {
@@ -36,18 +47,22 @@ namespace Phonebook.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Edit(Guid id, [FromBody] EditContactCommand command)
+        public async Task<IActionResult> Edit(Guid id, [FromBody] EditContactDTO dto)
         {
-            if (id != command.Id)
-                return BadRequest("ID na URL e no body não coincidem.");
+            var success = await _mediator.Send(
+                new EditContactCommand(
+                    id,
+                    dto.Name!,
+                    dto.PhoneNumber!,
+                    dto.Email!
+                )
+            );
 
-            var result = await _mediator.Send(command);
-            if (!result)
+            if (!success)
                 return NotFound();
 
             return NoContent();
         }
-
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
