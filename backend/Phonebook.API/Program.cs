@@ -49,6 +49,11 @@ app.UseAuthorization();
 
 app.MapControllers(); // Isso mapeia os endpoints dos controllers
 
-// app.UseHttpsRedirection(); // Desativado já que este é um projeto de teste
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<PhonebookDbContext>();
+    db.Database.EnsureCreated();
+    db.Seed();
+}
 
 app.Run();
