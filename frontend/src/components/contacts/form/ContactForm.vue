@@ -103,7 +103,7 @@ const handleSubmit = async (event: FormSubmitEvent) => {
   >
     <div class="flex items-center gap-2 pb-4">
       <ToggleSwitch inputId="disableValidation" v-model="disableValidation" />
-      <label for="disableValidation" class="text-sm">Desabilitar validação</label>
+      <label for="disableValidation" class="text-sm">Desabilitar validações do front-end</label>
     </div>
     <BaseInput label="Nome" icon="pi pi-user">
       <InputText name="name" />
