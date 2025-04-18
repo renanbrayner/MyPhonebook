@@ -1,11 +1,18 @@
 using Phonebook.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Phonebook.Infrastructure.Repositories;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using Phonebook.API.Validators;
 using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+
+builder.Services
+    .AddFluentValidationAutoValidation()
+    .AddValidatorsFromAssemblyContaining<CreateContactDTOValidator>();
 
 builder.Services.AddMediatR(typeof(Phonebook.Application.Contacts.Commands.CreateContactCommand).Assembly);
 builder.Services.AddScoped<IContactRepository, ContactRepository>();

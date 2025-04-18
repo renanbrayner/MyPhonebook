@@ -2,7 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Phonebook.Application.Contacts.Commands;
 using Phonebook.Application.Contacts.Queries;
-using Phonebook.Domain.DTO;
+using Phonebook.API.DTO;
 
 namespace Phonebook.API.Controllers
 {

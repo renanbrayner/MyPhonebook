@@ -1,4 +1,4 @@
-namespace Phonebook.Domain.DTO
+namespace Phonebook.API.DTO
 {
     public class EditContactDTO
     {
