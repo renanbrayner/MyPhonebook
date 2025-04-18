@@ -64,9 +64,9 @@ const confirmDeleteContact = (event) => {
 </script>
 
 <template>
-  <Toast />
-  <ConfirmPopup></ConfirmPopup>
   <Panel :toggleable="true" :collapsed="!isOpen" @toggle="emit('toggle')">
+    <Toast />
+    <ConfirmPopup></ConfirmPopup>
     <template #toggleicon="{ collapsed }">
       <span :class="collapsed ? 'pi pi-chevron-down' : 'pi pi-chevron-up'"></span>
     </template>

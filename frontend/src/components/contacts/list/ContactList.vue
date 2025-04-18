@@ -1,9 +1,14 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import ContactListItem from './ContactListItem.vue'
 import { useContacts } from '@/composables/useContacts'
 import Skeleton from 'primevue/skeleton'
 import { onMounted } from 'vue'
+import type { Contact } from '@/types/contact'
+
+const props = defineProps<{
+  filter: string
+}>()
 
 const { contacts, loading, error, loadContacts } = useContacts()
 
@@ -21,6 +26,19 @@ const openContact = (id: string) => {
   }
   expandedContact.value = id
 }
+
+const filteredContacts = computed(() => {
+  const term = props.filter.trim().toLowerCase()
+  if (!term) return contacts.value
+
+  return contacts.value.filter((c: Contact) => {
+    return (
+      c.name.toLowerCase().includes(term) ||
+      c.email.toLowerCase().includes(term) ||
+      c.phoneNumber.toLowerCase().includes(term)
+    )
+  })
+})
 </script>
 
 <template>
@@ -31,14 +49,20 @@ const openContact = (id: string) => {
     <div v-else-if="error" class="flex justify-center">
       <p>Erro ao carregar contatos: {{ error }}</p>
     </div>
-    <div v-else class="flex flex-col gap-4">
+    <transition-group v-else tag="div" name="stagger" class="flex flex-col gap-3">
       <ContactListItem
+        v-for="(contact, i) in filteredContacts"
+        class="stagger-item"
+        :style="{ '--delay': `${i * 15}ms` }"
         :isOpen="expandedContact === contact.id"
-        v-for="contact in contacts"
         :key="contact.id"
+        :id="contact.id"
         :contact="contact"
         @toggle="openContact(contact.id)"
       />
-    </div>
+    </transition-group>
+    <p v-if="!filteredContacts.length" class="text-center text-gray-500">
+      Nenhum contato encontrado para “{{ props.filter }}”
+    </p>
   </div>
 </template>

@@ -1,10 +1,13 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import ContactList from '@/components/contacts/list/ContactList.vue'
 import Button from 'primevue/button'
 import IconField from 'primevue/iconfield'
 import InputIcon from 'primevue/inputicon'
 import InputText from 'primevue/inputtext'
 import { RouterLink } from 'vue-router'
+
+const search = ref('')
 </script>
 
 <template>
@@ -14,7 +17,7 @@ import { RouterLink } from 'vue-router'
       <div class="flex gap-4">
         <IconField>
           <InputIcon class="pi pi-search" />
-          <InputText />
+          <InputText v-model="search" />
         </IconField>
         <RouterLink to="/contato">
           <Button
@@ -28,7 +31,7 @@ import { RouterLink } from 'vue-router'
       </div>
     </header>
     <main class="pt-20">
-      <ContactList />
+      <ContactList :filter="search" />
     </main>
   </div>
 </template>
