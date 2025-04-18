@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { Form } from '@primevue/forms'
 import type { FormSubmitEvent } from '@primevue/forms'
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import BaseInput from '../../BaseInput.vue'
 import Button from 'primevue/button'
 import { RouterLink } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
+import ToggleSwitch from 'primevue/toggleswitch'
 import InputMask from 'primevue/inputmask'
 import InputText from 'primevue/inputtext'
 import { zodResolver } from '@primevue/forms/resolvers/zod'
@@ -34,6 +35,7 @@ watch(
 )
 
 const toast = useToast()
+const disableValidation = ref(false)
 
 const contactSchema = z.object({
   name: z.string().nonempty({ message: 'Nenhum nome informado' }),
@@ -48,10 +50,16 @@ const contactSchema = z.object({
 
 const resolver = zodResolver(contactSchema)
 
+function noopResolver({ values }: { values: Record<string, any> }) {
+  return { values, errors: {} }
+}
+
+const activeResolver = computed(() => (disableValidation.value ? noopResolver : resolver))
+
 const submitting = ref(false)
 
 const handleSubmit = async (event: FormSubmitEvent) => {
-  if (!event.valid) {
+  if (!disableValidation.value && !event.valid) {
     toast.add({
       severity: 'error',
       summary: 'Erro',
@@ -88,11 +96,15 @@ const handleSubmit = async (event: FormSubmitEvent) => {
   <Form
     ref="formRef"
     v-slot="$form"
-    :resolver="resolver"
+    :resolver="activeResolver"
     @submit="handleSubmit"
     class="flex flex-col gap-1"
     :initialValues="props.initialValues ?? { name: '', phoneNumber: '', email: '' }"
   >
+    <div class="flex items-center gap-2 pb-4">
+      <ToggleSwitch inputId="disableValidation" v-model="disableValidation" />
+      <label for="disableValidation" class="text-sm">Desabilitar validação</label>
+    </div>
     <BaseInput label="Nome" icon="pi pi-user">
       <InputText name="name" />
       <template #message>

@@ -5,6 +5,7 @@ import { useContacts } from '@/composables/useContacts'
 import { useToast } from 'primevue/usetoast'
 import { useRoute, useRouter } from 'vue-router'
 import Toast from 'primevue/toast'
+import axios from 'axios'
 
 const { editContact, loadContactById, addContact } = useContacts()
 
@@ -53,12 +54,50 @@ const handleSubmit = async (formData: { name: string; phoneNumber: string; email
     }
 
     router.push('/')
-  } catch {
+  } catch (err) {
+    // Se não for um erro de requisição Axios ou não tiver response → fallback genérico
+    if (!axios.isAxiosError(err) || !err.response) {
+      toast.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'Não foi possível salvar o contato. Tente novamente mais tarde.',
+        life: 5000,
+      })
+      return
+    }
+
+    // Se não for status 400 ou não trouxer objeto errors → fallback genérico
+    const { status, data } = err.response
+    if (status !== 400 || typeof data?.errors !== 'object') {
+      toast.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'Não foi possível salvar o contato. Tente novamente mais tarde.',
+        life: 5000,
+      })
+      return
+    }
+
+    // Agora temos um 400 com data.errors como objeto
+    const apiErrors = data.errors as Record<string, string[]>
+    const messages = Object.values(apiErrors).filter(Array.isArray).flat()
+
+    if (messages.length === 0) {
+      toast.add({
+        severity: 'error',
+        summary: 'Erro de validação',
+        detail: 'O servidor retornou erros de validação, mas sem mensagens específicas.',
+        life: 5000,
+      })
+      return
+    }
+
+    // Exibe todas as mensagens vindas do backend
     toast.add({
       severity: 'error',
-      summary: 'Erro',
-      detail: 'Não foi possível salvar o contato.',
-      life: 3000,
+      summary: 'Erro de validação',
+      detail: messages.join('\n'),
+      life: 5000,
     })
   }
 }
