@@ -1,0 +1,49 @@
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: phonebook_sql
+    environment:
+      SA_PASSWORD: "P@ssw0rd"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    networks:
+      - app-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: phonebook_api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: >
+        Server=db;
+        Database=PhonebookDb;
+        User Id=sa;
+        Password=P@ssw0rd;
+        TrustServerCertificate=True;
+    ports:
+      - "5036:8080"
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: phonebook_web
+    environment:
+      VITE_API_URL: "http://backend"
+    ports:
+      - "5173:8080"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
