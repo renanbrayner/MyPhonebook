@@ -6,7 +6,6 @@ import { useConfirm } from 'primevue/useconfirm'
 import { useToast } from 'primevue/usetoast'
 import { defineProps } from 'vue'
 import { useContacts } from '@/composables/useContacts'
-import ConfirmPopup from 'primevue/confirmpopup'
 
 const props = defineProps<{
   contact: {
@@ -32,6 +31,7 @@ const acceptDeleteContact = async () => {
     await removeContact(props.contact.id)
     toast.add({
       severity: 'success',
+      summary: 'Contato excluído!',
       detail: 'O contato foi removido com sucesso.',
       life: 3000,
     })
@@ -75,6 +75,7 @@ const confirmDeleteContact = (event: MouseEvent) => {
     acceptProps: {
       label: 'Deletar',
       severity: 'danger',
+      id: 'confirm-delete-contact-btn',
     },
     accept: acceptDeleteContact,
   })
@@ -83,7 +84,6 @@ const confirmDeleteContact = (event: MouseEvent) => {
 
 <template>
   <Panel class="p-1" :toggleable="true" :collapsed="!isOpen" @toggle="emit('toggle')">
-    <ConfirmPopup></ConfirmPopup>
     <template #toggleicon="{ collapsed }">
       <span :class="collapsed ? 'pi pi-chevron-down' : 'pi pi-chevron-up'"></span>
     </template>
@@ -113,6 +113,7 @@ const confirmDeleteContact = (event: MouseEvent) => {
       <div class="justify-end hidden md:flex">
         <RouterLink :to="`/contato/${contact.id}`">
           <Button
+            id="edit-contact-btn"
             icon="pi pi-pencil"
             severity="secondary"
             rounded
@@ -122,6 +123,7 @@ const confirmDeleteContact = (event: MouseEvent) => {
           />
         </RouterLink>
         <Button
+          id="delete-contact-btn"
           icon="pi pi-trash"
           severity="secondary"
           rounded
@@ -134,6 +136,7 @@ const confirmDeleteContact = (event: MouseEvent) => {
       <div class="justify-end md:hidden flex">
         <RouterLink :to="`/contato/${contact.id}`">
           <Button
+            id="edit-contact-mobile-btn"
             icon="pi pi-pencil"
             severity="secondary"
             rounded
@@ -143,6 +146,7 @@ const confirmDeleteContact = (event: MouseEvent) => {
           />
         </RouterLink>
         <Button
+          id="delete-contact-mobile-btn"
           icon="pi pi-trash"
           severity="secondary"
           rounded

@@ -6,7 +6,7 @@ import ConfirmPopup from 'primevue/confirmpopup'
 </script>
 
 <template>
-  <ConfirmPopup />
+  <ConfirmPopup appendTo="body" id="confirm-delete-contact-dialog" />
   <ConfirmDialog group="delete-contact-dialog" />
   <Toast />
   <RouterView />

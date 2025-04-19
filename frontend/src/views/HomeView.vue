@@ -17,7 +17,7 @@ const search = ref('')
       <div class="flex gap-4">
         <IconField>
           <InputIcon class="pi pi-search" />
-          <InputText v-model="search" />
+          <InputText id="search-input" v-model="search" />
         </IconField>
         <RouterLink to="/contato">
           <Button
