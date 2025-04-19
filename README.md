@@ -2,6 +2,8 @@
 
 MyPhonebook é um projeto de exemplo de uma agenda de contatos, implementado com as tecnologias mais atuais do ecossistema .NET e Vue. Serve como referência de boas práticas de arquitetura (CQRS, Mediator, Repository Pattern), migrações automáticas, seed de dados, Docker, testes automatizados e frontend moderno.
 
+Para informações mais detalhadas sobre o backend e o frontend, veja o [README.md](backend/README.md) e o [README.md](frontend/README.md) respectivamente.
+
 ## Tecnologias
 
 - **Backend**: .NET 8, ASP.NET Core Web API, Entity Framework Core, MediatR, FluentValidation
