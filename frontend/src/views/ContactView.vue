@@ -19,14 +19,11 @@ const initialValues = ref<{ name: string; phoneNumber: string; email: string }>(
   email: '',
 })
 
-const id = route.params.id as string | undefined
-const isEdit = !!id
-
 onMounted(async () => {
-  if (!isEdit) return
+  if (!route.params.id) return
 
   try {
-    const data = await loadContactById(id)
+    const data = await loadContactById(route.params.id as string)
     initialValues.value = {
       name: data.name,
       phoneNumber: data.phoneNumber,
@@ -45,15 +42,14 @@ onMounted(async () => {
 
 const handleSubmit = async (formData: { name: string; phoneNumber: string; email: string }) => {
   try {
-    if (isEdit) {
-      await editContact(id!, formData)
+    if (!!route.params.id) {
+      await editContact(route.params.id! as string, formData)
       toast.add({ severity: 'success', summary: 'Contato atualizado!', life: 3000 })
     } else {
-      await addContact(formData)
+      const res = await addContact(formData)
       toast.add({ severity: 'success', summary: 'Contato criado!', life: 3000 })
+      router.push(`/contato/${res.id}`)
     }
-
-    router.push('/')
   } catch (err) {
     // Se não for um erro de requisição Axios ou não tiver response → fallback genérico
     if (!axios.isAxiosError(err) || !err.response) {
@@ -106,7 +102,7 @@ const handleSubmit = async (formData: { name: string; phoneNumber: string; email
 <template>
   <div class="flex flex-col gap-4 items-center justify-center">
     <Toast />
-    <h1 class="text-2xl">{{ isEdit ? 'Editar contato' : 'Novo contato' }}</h1>
+    <h1 class="text-2xl">{{ !!route.params.id ? 'Editar contato' : 'Novo contato' }}</h1>
     <ContactForm :initialValues="initialValues" @submit="handleSubmit" />
   </div>
 </template>

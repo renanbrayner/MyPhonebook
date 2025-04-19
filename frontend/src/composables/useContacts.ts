@@ -32,6 +32,7 @@ export function useContacts() {
     try {
       const newContact = await createContact(payload)
       contacts.value.unshift(newContact)
+      return newContact
     } catch (err) {
       error.value = parseApiError(err)
       throw err

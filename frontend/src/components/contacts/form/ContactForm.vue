@@ -152,9 +152,11 @@ const handleSubmit = async (event: FormSubmitEvent) => {
     </BaseInput>
     <div class="flex gap-4">
       <RouterLink class="flex-1" to="/">
-        <Button fluid outlined label="Cancelar" icon="pi pi-times" />
+        <Button fluid outlined label="Voltar" icon="pi pi-chevron-left" />
       </RouterLink>
-      <Button type="submit" outlined class="flex-1" label="Salvar" icon="pi pi-save" />
+      <div class="flex-1">
+        <Button fluid type="submit" outlined label="Salvar" icon="pi pi-save" />
+      </div>
     </div>
   </Form>
 </template>
