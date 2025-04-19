@@ -99,7 +99,7 @@ const handleSubmit = async (formData: { name: string; phoneNumber: string; email
 </script>
 
 <template>
-  <div class="flex flex-col gap-4 items-center justify-center">
+  <div class="flex flex-col gap-4 items-center justify-center md:pt-20">
     <Toast />
     <h1 class="text-2xl">{{ !!route.params.id ? 'Editar contato' : 'Novo contato' }}</h1>
     <ContactForm :initialValues="initialValues" @submit="handleSubmit" />
