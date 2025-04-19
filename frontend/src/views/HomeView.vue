@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import ConfirmDialog from 'primevue/confirmdialog'
 import { ref } from 'vue'
 import ContactList from '@/components/contacts/list/ContactList.vue'
 import Button from 'primevue/button'
@@ -21,6 +22,7 @@ const search = ref('')
         </IconField>
         <RouterLink to="/contato">
           <Button
+            id="add-contact"
             icon="pi pi-plus"
             aria-label="adicionar contato"
             outlined
@@ -33,5 +35,6 @@ const search = ref('')
     <main class="pt-20">
       <ContactList :filter="search" />
     </main>
+    <ConfirmDialog group="delete-contact-dialog" />
   </div>
 </template>
