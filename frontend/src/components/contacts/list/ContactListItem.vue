@@ -7,7 +7,6 @@ import { useToast } from 'primevue/usetoast'
 import { defineProps } from 'vue'
 import { useContacts } from '@/composables/useContacts'
 import ConfirmPopup from 'primevue/confirmpopup'
-import Toast from 'primevue/toast'
 
 const props = defineProps<{
   contact: {
@@ -84,7 +83,6 @@ const confirmDeleteContact = (event: MouseEvent) => {
 
 <template>
   <Panel class="p-1" :toggleable="true" :collapsed="!isOpen" @toggle="emit('toggle')">
-    <Toast />
     <ConfirmPopup></ConfirmPopup>
     <template #toggleicon="{ collapsed }">
       <span :class="collapsed ? 'pi pi-chevron-down' : 'pi pi-chevron-up'"></span>

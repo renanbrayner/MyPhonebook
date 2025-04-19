@@ -4,7 +4,6 @@ import { ref, onMounted } from 'vue'
 import { useContacts } from '@/composables/useContacts'
 import { useToast } from 'primevue/usetoast'
 import { useRoute, useRouter } from 'vue-router'
-import Toast from 'primevue/toast'
 import axios from 'axios'
 
 const { editContact, loadContactById, addContact } = useContacts()
