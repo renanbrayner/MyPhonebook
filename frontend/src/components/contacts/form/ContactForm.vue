@@ -18,6 +18,7 @@ const props = defineProps<{
     phoneNumber: string
     email: string
   }
+  submitting?: boolean
   onSubmit: (formData: { name: string; phoneNumber: string; email: string }) => Promise<void>
 }>()
 
@@ -154,7 +155,14 @@ const handleSubmit = async (event: FormSubmitEvent) => {
         <Button fluid outlined label="Voltar" icon="pi pi-chevron-left" />
       </RouterLink>
       <div class="flex-1">
-        <Button fluid type="submit" outlined label="Salvar" icon="pi pi-save" />
+        <Button
+          :loading="submitting"
+          fluid
+          type="submit"
+          outlined
+          label="Salvar"
+          icon="pi pi-save"
+        />
       </div>
     </div>
   </Form>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import ContactForm from '@/components/contacts/form/ContactForm.vue'
+import Skeleton from 'primevue/skeleton'
 import { ref, onMounted } from 'vue'
 import { useContacts } from '@/composables/useContacts'
 import { useToast } from 'primevue/usetoast'
@@ -18,10 +19,15 @@ const initialValues = ref<{ name: string; phoneNumber: string; email: string }>(
   email: '',
 })
 
+const submitting = ref(false)
+
+const initialLoading = ref(!!route.params.id)
+
 onMounted(async () => {
   if (!route.params.id) return
 
   try {
+    initialLoading.value = true
     const data = await loadContactById(route.params.id as string)
     initialValues.value = {
       name: data.name,
@@ -36,11 +42,14 @@ onMounted(async () => {
       life: 3000,
     })
     router.push('/')
+  } finally {
+    initialLoading.value = false
   }
 })
 
 const handleSubmit = async (formData: { name: string; phoneNumber: string; email: string }) => {
   try {
+    submitting.value = true
     if (!!route.params.id) {
       await editContact(route.params.id! as string, formData)
       toast.add({ severity: 'success', summary: 'Contato atualizado!', life: 3000 })
@@ -94,6 +103,8 @@ const handleSubmit = async (formData: { name: string; phoneNumber: string; email
       detail: messages.join('\n'),
       life: 5000,
     })
+  } finally {
+    submitting.value = false
   }
 }
 </script>
@@ -102,6 +113,22 @@ const handleSubmit = async (formData: { name: string; phoneNumber: string; email
   <div class="flex flex-col gap-4 items-center justify-center md:pt-20">
     <Toast />
     <h1 class="text-2xl">{{ !!route.params.id ? 'Editar contato' : 'Novo contato' }}</h1>
-    <ContactForm :initialValues="initialValues" @submit="handleSubmit" />
+    <ContactForm
+      :submitting="submitting"
+      v-if="!initialLoading"
+      :initialValues="initialValues"
+      @submit="handleSubmit"
+    />
+    <div class="flex flex-col gap-8 w-72 pt-10" v-else>
+      <Skeleton class="p-3" />
+      <Skeleton class="p-6" />
+      <Skeleton class="p-6" />
+      <Skeleton class="p-6" />
+
+      <div class="flex gap-4">
+        <Skeleton class="p-6 flex-1" />
+        <Skeleton class="p-6 flex-1" />
+      </div>
+    </div>
   </div>
 </template>
