@@ -7,34 +7,28 @@ using Phonebook.Infrastructure.Data;
 using Phonebook.Infrastructure.Repositories;
 using Xunit;
 
-namespace Phonebook.Tests.Application
+public class CreateContactHandlerTests
 {
-    public class CreateContactHandlerTests
+    private PhonebookDbContext NewContext()
     {
-        private PhonebookDbContext GetInMemoryDb(string name)
-        {
-            var options = new DbContextOptionsBuilder<PhonebookDbContext>()
-                .UseInMemoryDatabase(databaseName: name)
-                .Options;
-            return new PhonebookDbContext(options);
-        }
+        var opt = new DbContextOptionsBuilder<PhonebookDbContext>()
+            .UseInMemoryDatabase(Guid.NewGuid().ToString())
+            .Options;
+        return new PhonebookDbContext(opt);
+    }
 
-        [Fact]
-        public async Task Handle_ValidCommand_CreatesAndReturnsGuid()
-        {
-            // Arrange
-            var db = GetInMemoryDb("TestDb1");
-            var repo = new ContactRepository(db);
-            var handler = new CreateContactCommandHandler(db);
-            var cmd = new CreateContactCommand("Ana", "(21) 98888-8888", "ana@mail.com");
+    [Fact]
+    public async Task Handle_ValidCommand_SavesContact()
+    {
+        await using var ctx = NewContext();
+        var repo = new ContactRepository(ctx);
+        var handler = new CreateContactCommandHandler(repo);
 
-            // Act
-            var newId = await handler.Handle(cmd, CancellationToken.None);
+        var cmd = new CreateContactCommand("Ana", "(11) 98888-7777", "ana@test.com");
+        var id = await handler.Handle(cmd, CancellationToken.None);
 
-            // Assert
-            var created = await db.Contacts.FindAsync(newId);
-            Assert.NotNull(created);
-            Assert.Equal("Ana", created.Name);
-        }
+        Assert.NotEqual(Guid.Empty, id);
+        var saved = await ctx.Contacts.FindAsync(id);
+        Assert.Equal("Ana", saved!.Name);
     }
 }
