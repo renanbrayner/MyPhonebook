@@ -1,5 +1,6 @@
 using Phonebook.Domain.Entities;
 using Phonebook.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Phonebook.Infrastructure.Repositories
 {
@@ -21,7 +22,7 @@ namespace Phonebook.Infrastructure.Repositories
 
         public async Task<List<Contact>> GetAllAsync(CancellationToken cancellationToken)
         {
-            return await Task.FromResult(_context.Contacts.ToList());
+            return await _context.Contacts.OrderBy(c => c.Name).ToListAsync(cancellationToken);
         }
 
         public async Task<Contact?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
