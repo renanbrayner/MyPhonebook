@@ -61,7 +61,7 @@ const filteredContacts = computed(() => {
         @toggle="openContact(contact.id)"
       />
     </transition-group>
-    <p v-if="!filteredContacts.length" class="text-center text-gray-500">
+    <p v-if="!filteredContacts.length && filter !== ''" class="text-center text-gray-500">
       Nenhum contato encontrado para “{{ props.filter }}”
     </p>
   </div>
