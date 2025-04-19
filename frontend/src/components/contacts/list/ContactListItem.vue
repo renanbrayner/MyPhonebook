@@ -28,9 +28,11 @@ const { removeContact } = useContacts()
 const confirm = useConfirm()
 const toast = useToast()
 
-const confirmDeleteContact = (event) => {
+const confirmDeleteContact = (event: MouseEvent) => {
+  const target = event.currentTarget as HTMLElement
+
   confirm.require({
-    target: event.currentTarget,
+    target,
     message: 'Tem certeza que deseja excluir este contato?',
     icon: 'pi pi-exclamation-triangle',
     rejectProps: {

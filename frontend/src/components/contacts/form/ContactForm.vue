@@ -22,17 +22,20 @@ const props = defineProps<{
   onSubmit: (formData: { name: string; phoneNumber: string; email: string }) => Promise<void>
 }>()
 
-const formRef = ref<InstanceType<typeof Form>>()
-watch(
-  // Isso é necessário pois o <Form> do PrimeVue só “puxa” o initialValues uma única vez na montagem, e depois não sincroniza mais automaticamente com essa prop
-  () => props.initialValues,
-  (vals) => {
-    if (formRef.value && vals) {
-      formRef.value.setValues(vals)
-    }
-  },
-  { immediate: true },
-)
+// const formRef = ref<InstanceType<typeof Form>>()
+// watch(
+//   // Isso é necessário pois o <Form> do PrimeVue só “puxa” o initialValues uma única vez na montagem, e depois não sincroniza mais automaticamente com essa prop
+//   () => props.initialValues,
+//   (vals) => {
+//     if (formRef.value && vals) {
+//       formRef.value.setValues(vals)
+//     }
+//   },
+//   { immediate: true },
+// )
+
+// gera uma key única toda vez que initialValues mudar
+const initialKey = computed(() => JSON.stringify(props.initialValues))
 
 const toast = useToast()
 const disableValidation = ref(false)
@@ -94,7 +97,7 @@ const handleSubmit = async (event: FormSubmitEvent) => {
 <template>
   <Toast />
   <Form
-    ref="formRef"
+    :key="initialKey"
     v-slot="$form"
     :resolver="activeResolver"
     @submit="handleSubmit"
