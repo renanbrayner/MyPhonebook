@@ -86,32 +86,6 @@ Em produção, ajuste via variáveis de ambiente ou `appsettings.{Environment}.j
 
 A documentação interativa está disponível em **/swagger**.
 
-## Comandos Makefile
-
-No root do projeto (Makefile):
-
-```makefile
-# Build da API
-build-backend:
-	docker-compose build backend
-
-# Sobe API + DB (em background)
-up-backend:
-	docker-compose up -d backend
-
-# Destrói containers e volumes
-down-backend:
-	docker-compose down -v
-
-# Atualiza esquema do banco (rodando local)
-migrate-backend:
-	dotnet ef database update --project backend/Phonebook.Infrastructure --startup-project backend/Phonebook.API
-
-# Executa testes de unidade
-test-backend:
-	dotnet test Phonebook.Tests/Phonebook.Tests.csproj
-```
-
 ## Docker
 
 - **Dockerfile** em `/backend/Dockerfile`: build multi-stage com SDK (build/publish) e ASP.NET Runtime.
