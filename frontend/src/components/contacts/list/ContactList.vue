@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 import ContactListItem from './ContactListItem.vue'
 import { useContacts } from '@/composables/useContacts'
+import Button from 'primevue/button'
 import Skeleton from 'primevue/skeleton'
 import { onMounted } from 'vue'
 import type { Contact } from '@/types/contact'
@@ -43,7 +44,18 @@ const filteredContacts = computed(() => {
 
 <template>
   <div class="flex flex-col gap-4">
+    <div class="self-end" v-if="!loading">
+      <Button
+        label="Recarregar Lista"
+        icon="pi pi-refresh"
+        @click="loadContacts"
+        severity="secondary"
+        variant="text"
+        size="small"
+      />
+    </div>
     <div v-if="loading" class="flex flex-col gap-4">
+      <Skeleton class="self-end pt-[36px] max-w-36" />
       <Skeleton class="w-full pt-[52px]" v-for="i in 10" :key="i" />
     </div>
     <div v-else-if="error" class="flex justify-center">
